@@ -28,4 +28,10 @@ public class UserKeyEntity {
 
     @Column(nullable = false)
     private long createdDate;
+
+    public UserKeyEntity(String username, String code, long createdDate) {
+        this.username = username;
+        this.code = code;
+        this.createdDate = createdDate;
+    }
 }
