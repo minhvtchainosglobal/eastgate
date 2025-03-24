@@ -31,3 +31,15 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Compliled files
+/target/
+**/target
+
+# Maven
+dist/
+
+# Environment files
+**/.env
+**/.env.*
+
