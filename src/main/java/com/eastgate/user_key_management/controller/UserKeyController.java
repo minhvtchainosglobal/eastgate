@@ -2,6 +2,7 @@ package com.eastgate.user_key_management.controller;
 
 import com.eastgate.user_key_management.dto.BaseResponseDTO;
 import com.eastgate.user_key_management.dto.UserKeyDTO;
+import com.eastgate.user_key_management.enumeration.Constants;
 import com.eastgate.user_key_management.enumeration.ErrorCode;
 import com.eastgate.user_key_management.exception.ValidationException;
 import com.eastgate.user_key_management.service.UserKeyService;
@@ -45,5 +46,14 @@ public class UserKeyController {
         BaseResponseDTO responseDTO = new BaseResponseDTO();
         responseDTO.setData(data);
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @DeleteMapping("/{keyId}")
+    public ResponseEntity<BaseResponseDTO> deleteUserKey(@PathVariable String keyId) {
+        if (StringUtils.isBlank(keyId)) {
+            throw new ValidationException(ErrorCode.USER_KEY_CANNOT_BE_EMPTY);
+        }
+        userKeyService.deleteUserKey(keyId);
+        return ResponseEntity.ok(BaseResponseDTO.builder().data(Constants.SUCCESS).build());
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 
 @Service
@@ -50,5 +51,19 @@ public class UserKeyServiceImpl implements UserKeyService {
     @Override
     public List<UserKeyDTO> findAllByUsernameOrderByCreatedDateAsc(String username) {
         return userKeyMapper.toDto(userKeyRepository.findAllByUsernameOrderByCreatedDateAsc(username));
+    }
+
+    @Override
+    public void deleteUserKey(String keyId) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(keyId);
+        } catch (IllegalArgumentException ex) {
+            throw new BusinessException(ErrorCode.USER_KEY_HAS_WRONG_FORMAT);
+        }
+        if (!userKeyRepository.existsById(uuid)) {
+            throw new BusinessException(ErrorCode.USER_KEY_IS_NOT_FOUND);
+        }
+        userKeyRepository.deleteById(uuid);
     }
 }
