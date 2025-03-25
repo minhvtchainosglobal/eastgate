@@ -2,7 +2,10 @@ package com.eastgate.user_key_management.controller;
 
 import com.eastgate.user_key_management.dto.BaseResponseDTO;
 import com.eastgate.user_key_management.dto.UserKeyDTO;
+import com.eastgate.user_key_management.enumeration.ErrorCode;
+import com.eastgate.user_key_management.exception.ValidationException;
 import com.eastgate.user_key_management.service.UserKeyService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -26,12 +29,18 @@ public class UserKeyController {
 
     @PostMapping("/create/{username}")
     public ResponseEntity<BaseResponseDTO> createUserKey(@PathVariable String username) {
+        if (StringUtils.isBlank(username)) {
+            throw new ValidationException(ErrorCode.USERNAME_CANNOT_BE_EMPTY);
+        }
         UserKeyDTO dto = userKeyService.createUserKey(username);
         return ResponseEntity.ok(BaseResponseDTO.builder().data(dto).build());
     }
 
     @GetMapping("/{username}")
     public ResponseEntity<BaseResponseDTO> getUserKey(@PathVariable String username) {
+        if (StringUtils.isBlank(username)) {
+            throw new ValidationException(ErrorCode.USERNAME_CANNOT_BE_EMPTY);
+        }
         List<UserKeyDTO> data = userKeyService.findAllByUsernameOrderByCreatedDateAsc(username);
         BaseResponseDTO responseDTO = new BaseResponseDTO();
         responseDTO.setData(data);
